@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        (function ($) {
+          // Define your plugin function
+          $.fn.node = function () {
+            const submit = $("#submit_button");
+            const user_name_tb = $("#user_name_tb");
+
+            submit.click(function () {
+              // /api/data is an endpoint responsible for handling requests related to data
+              fetch("http://localhost:3000/api/data", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "text/plain", //setting the mime type(indicates the kind of data being sent)
+                },
+                body: user_name_tb.val(),
+              })
+                /*moves to server-side*/ .then((response) => response.text())
+                .then((data) => {
+                  // Handle the response data from the server
+                  $("#server_response").text(data);
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            });
+          };
+        })(jQuery);
+        $("#node_project_container").node();
+      });
+    </script>
+    <title>Node Hello World</title>
+  </head>
+  <body>
+    <div id="node_project_container">
+      <h1>Node Project</h1>
+      <label for="user_name">Enter your name: </label>
+      <input type="text" id="user_name_tb" name="user_name" />
+      <button id="submit_button">Submit</button>
+      <p id="server_response"></p>
+    </div>
+  </body>
+</html>
